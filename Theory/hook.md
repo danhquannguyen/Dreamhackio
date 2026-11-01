@@ -8,6 +8,17 @@
     - caller: Địa chỉ lệnh gọi **free()** được lấy thông qua marco **RETURN_ADDRESS(0)**
 
 # Cơ chế hoạt động của __free_hook trong glibc:
+  - __libc_free source code (glibc <= 2.33):
+    ```c
+    void __libc_free (void *mem) {
+        void (*hook) (void *, const void *) = atomic_forced_read (__free_hook);
+        if (__builtin_expect (hook != NULL, 0)) {
+            (*hook)(mem, RETURN_ADDRESS (0)); // Gọi con trỏ hook
+            return;                           // <-- KẾT THÚC HÀM NGAY LẬP TỨC
+        }
+        // Toàn bộ logic giải phóng chunk, kiểm tra double free nằm ở phía dưới...
+    }
+    ```
   - **__free_hook == NULL** (Mặc định):
     - Hàm **free(ptr)** kiểm tra thấy con trỏ hook rỗng.
     - Luồng thực thi tiếp tục đi xuống quy trình giải phóng bộ nhớ heap tiêu chuẩn (**_int_free**): kiểm tra tính hợp lệ của chunk, đưa chunk vào **tcache**, **fastbin**, hoặc gộp chunk trong **unsorted bin**.
